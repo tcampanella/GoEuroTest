@@ -1,4 +1,4 @@
-package jersey;
+package com.goEuroTest;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,44 +9,63 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
+import com.goEuroTest.util.ConfigurationLoader;
 import com.opencsv.CSVWriter;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import util.JsonConfiguration;
-
-public class JerseyClientGet {
+/**
+ * The following class is used to generate the REST call (GET)
+ * and to create a csv file from the corresponding response (Json objects)
+ * 
+ * @author Tommaso Campanella
+ *
+ */
+public class GoEuro implements IGoEuro {
 	
-	//Load configuration file
-	JsonConfiguration jsonConfiguration = null;
+	ConfigurationLoader configurationLoader = null;
 	
-	
-	public JerseyClientGet() {
+	/**
+	 * First Constructor
+	 */
+	public GoEuro() {
 		
-		jsonConfiguration = new JsonConfiguration();
+		configurationLoader = new ConfigurationLoader();
 	}
 	
-	public JerseyClientGet(String configurationFileName) {
+	
+	/**
+	 * Second Constructor
+	 * 
+	 * @param configurationFileName
+	 */
+	public GoEuro(String configurationFileName) {
 		
-		jsonConfiguration = new JsonConfiguration(configurationFileName);
+		configurationLoader = new ConfigurationLoader(configurationFileName);
 	}
 	
-	
-	public ClientResponse loadJsonResponse(String cityName) {
+	/**
+	 * The following method will first make a Rest call to a specific cityName 
+	 * and then it will return the corresponding as a ClientResponse instance 
+	 * 
+	 * @param cityName
+	 * @return an instance of ClientResponse
+	 */
+	public ClientResponse restCall(String cityName) {
 		
 		Client client = Client.create();
 		
-		String URL = jsonConfiguration.get("URL")+cityName;
+		String URL = configurationLoader.get("URL")+cityName;
 		WebResource webResource = null;
+		
 		try {
 			
 			webResource = client.resource(URL);
 
-			
 		} catch (IllegalArgumentException e) {
 			
-			System.out.println("The provided URL " + URL + " is not well formatted: please provide a correct one");
+			System.err.println(configurationLoader.get("WRONG_URL"));
 			return null;
 
 		}
@@ -55,41 +74,60 @@ public class JerseyClientGet {
 
 		if (response.getStatus() != 200) {
 
-			System.out.println("Failed : HTTP error code : " + response.getStatus());
+			System.err.println("Failed : HTTP error code : " + response.getStatus());
 			return null;
 		}
 		
 		return response;
 	}
 	
+	/**
+	 * The following methods create a csv file, in which the jsonResponse provided as argument
+	 * is written
+	 * 
+	 * @param jsonResponse
+	 * @return a boolean to state if the csv file has been successfully created or not
+	 */
 	public boolean jsonToCsv(String jsonResponse) {
 		
 		JsonReader jsonReader = Json.createReader(new StringReader(jsonResponse));
-		JsonArray jsonArray = jsonReader.readArray();
-		jsonReader.close();
+		JsonArray jsonArray = null;
+		
+		try {
+			
+			jsonArray = jsonReader.readArray();
+			
+		} catch (Exception e) {
+			
+			 e.printStackTrace();
+			 return false;
+			 
+		} finally {
+			
+			jsonReader.close();
+	    	
+	    }
 		
 		if(jsonArray.size() == 0){
 			
-			System.out.println(jsonConfiguration.get("EMPTY_RESPONSE"));
+			System.err.println(configurationLoader.get("EMPTY_RESPONSE"));
 			return false;
 			
 		} else {
 		
-			String outputFile = jsonConfiguration.get("FILE_NAME");
+			String outputFile = configurationLoader.get("FILE_NAME");
 			
 			try {
+				
 				// use FileWriter constructor that specifies open for appending
 				CSVWriter csvOutput = new CSVWriter(new FileWriter(outputFile, false), ',');
 				
-				// if the file didn't already exist then we need to write out the header line
-				//String header[] = {" _id","name","type","latitude","longitude"};
+				// Getting the header line
+				String header[] = configurationLoader.get("HEADER").split(",");
 				
-				String header[] = jsonConfiguration.get("HEADER").split(",");
-				
+				// Writing the header line
 				csvOutput.writeNext(header);
 				
-				//System.out.println("--- Test output ---");
-
 				for(int i = 0;i < jsonArray.size();i++) {
 					
 					int _id = (jsonArray.getJsonObject(i)).getInt("_id");
@@ -101,8 +139,7 @@ public class JerseyClientGet {
 					
 					String[] newLine = {Integer.toString(_id),name,type,Double.toString(latitude),Double.toString(longitude)};
 					
-					//System.out.println(java.util.Arrays.toString(newLine));
-					
+					//writing the JsonObject
 					csvOutput.writeNext(newLine);
 					
 				}
