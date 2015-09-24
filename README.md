@@ -23,7 +23,9 @@ The URL, name of the csv file and additional output strings can be found under: 
 GoEuroTest is released under the *GNU LESSER GENERAL PUBLIC LICENSE version 3*.  See `LICENSE.md`.
 
 
+## Executable
 
+A generated uber jar (_GoEuro.jar_) can be found attached to the first release (0.1)
 
 
 
