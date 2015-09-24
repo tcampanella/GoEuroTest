@@ -7,6 +7,13 @@ import org.junit.Test;
 import com.goEuroTest.*;
 import com.sun.jersey.api.client.ClientResponse;
 
+/**
+ * The following code is used to test the expected behaviour
+ * as by specification in https://github.com/goeuro/dev-test/
+ * 
+ * @author Tommaso Campanella
+ *
+ */
 public class MainTest {
 	
 	private IGoEuro goEuro = null;

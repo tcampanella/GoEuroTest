@@ -99,7 +99,7 @@ public class GoEuro implements IGoEuro {
 			
 		} catch (Exception e) {
 			
-			 e.printStackTrace();
+			System.err.println(configurationLoader.get("JSON_RESPONSE_BAD_FORMATTING"));
 			 return false;
 			 
 		} finally {

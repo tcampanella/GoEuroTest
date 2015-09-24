@@ -12,6 +12,14 @@ import com.goEuroTest.*;
 import com.opencsv.CSVReader;
 import com.sun.jersey.api.client.ClientResponse;
 
+/**
+ * The following code is used to test the functionality
+ * of the interface IGoEuro
+ * 
+ * 
+ * @author Tommaso Campanella
+ *
+ */
 public class GoEuroTest {
 	
 	private IGoEuro goEuro = null;

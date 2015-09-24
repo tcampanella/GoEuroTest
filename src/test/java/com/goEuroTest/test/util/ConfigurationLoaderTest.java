@@ -6,6 +6,12 @@ import org.junit.Test;
 
 import com.goEuroTest.util.ConfigurationLoader;
 
+/**
+ * Test code for the class ConfigurationLoader
+ * 
+ * @author Tommaso Campanella
+ *
+ */
 public class ConfigurationLoaderTest {
 	
 	@Test
