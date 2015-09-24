@@ -1,7 +1,7 @@
 GoEuro Test
 ===================
 
-The purpose of this project is to provide a solution to the test proposed by GoEuro. Please refer to following repository for a full description of the program specifications: [GoEuro Specification page](https://github.com/goeuro/dev-test/).
+The purpose of this project is to provide a solution to the test proposed by GoEuro. Please refer to following repository for a full description of the program specifications: [GoEuro Specification page](https://github.com/goeuro/dev-test/)
 
 The source code rely on the following frameworks:
 
@@ -16,7 +16,7 @@ java -jar GoEuro.jar "CITY_NAME"
 
 The project contains also a set of test (see package "com.goEuroTest.test").
 
-The URL, name of the csv file and additional output strings can be found under _src/main/resources/configuration/configuration.properties_
+The URL, name of the csv file and additional output strings can be found under: _src/main/resources/configuration/configuration.properties_
 
 ## License
 
